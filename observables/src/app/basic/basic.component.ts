@@ -19,12 +19,13 @@ export class BasicComponent implements OnInit {
         obs.next(3);
         obs.next(4);
         obs.next(5);
+        obs.error('ocorreu um error');
         obs.complete();
       }
     );
     myFirstObservable.subscribe(
       (n: number) => {console.log(n); } ,
-      (error) => console.log(error),
+      (error) => console.error(error),
       () => console.log('completed.')
 
     );
