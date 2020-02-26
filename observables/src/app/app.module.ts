@@ -4,12 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { BasicComponent } from './basic/basic.component';
 import { ColdObservablesComponent } from './cold-observables/cold-observables.component';
+import { HotObservablesIntroComponent } from './hot-observables-intro/hot-observables-intro.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BasicComponent,
-    ColdObservablesComponent
+    ColdObservablesComponent,
+    HotObservablesIntroComponent
   ],
   imports: [
     BrowserModule
