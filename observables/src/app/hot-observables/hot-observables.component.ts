@@ -1,5 +1,6 @@
 import { Observable, Observer, Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
+import {publish, refCount} from 'rxjs/operators';
 
 @Component({
   selector: 'app-hot-observables',
@@ -31,18 +32,22 @@ export class HotObservablesComponent implements OnInit {
       }
     );
     this.usingSubjects();
+    this.usingPublish();
   }
 
+  usingPublish() {
+    const multicasted = this.myObservable.pipe(publish(), refCount());
+  }
   usingSubjects() {
     const subject = new Subject<number>();
     this.myObservable.subscribe(subject);
 
     this.s1 = 'waiting for interval...';
 
-    //Subscribe 1
+    // Subscribe 1
     setTimeout(() => {
-      subject.subscribe((_n) => {
-        this.n1 = _n;
+      subject.subscribe((nn) => {
+        this.n1 = nn;
         this.s1 = 'ok';
       });
     }, 2000);
@@ -51,8 +56,8 @@ export class HotObservablesComponent implements OnInit {
     this.s2 = 'waiting for interval...';
     // Subscribe 2
     setTimeout(() => {
-      subject.subscribe((_n) => {
-        this.n2 = _n;
+      subject.subscribe((nn) => {
+        this.n2 = nn;
         this.s2 = 'ok';
       });
     }, 4000);
