@@ -1,4 +1,4 @@
-import { Observable, Observer, Subject } from 'rxjs';
+import { Observable, Observer, Subject, ConnectableObservable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import {publish, refCount} from 'rxjs/operators';
 
@@ -36,7 +36,32 @@ export class HotObservablesComponent implements OnInit {
   }
 
   usingPublish() {
-    const multicasted = this.myObservable.pipe(publish(), refCount());
+    //publish transforma em subject
+    //refCount() se conecta ao fazer um subscribe
+    // const multicasted = this.myObservable.pipe(publish(), refCount());
+
+    //dessa maneira abaixo, conecta qdo clicar em connect
+    const multicasted: ConnectableObservable<number> = this.myObservable.pipe(publish()) as ConnectableObservable<number>;
+    multicasted.connect();
+    this.s1 = 'waiting for interval...';
+     // Subscribe 1
+    setTimeout(() => {
+      multicasted.subscribe((nn) => {
+        this.n1 = nn;
+        this.s1 = 'ok';
+      });
+    }, 2000);
+
+
+    this.s2 = 'waiting for interval...';
+    // Subscribe 2
+    setTimeout(() => {
+      multicasted.subscribe((nn) => {
+        this.n2 = nn;
+        this.s2 = 'ok';
+      });
+    }, 4000);
+
   }
   usingSubjects() {
     const subject = new Subject<number>();
