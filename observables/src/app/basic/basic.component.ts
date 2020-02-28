@@ -8,7 +8,7 @@ import { Observable, Observer, Subscription } from 'rxjs';
   styleUrls: ['./basic.component.css']
 })
 export class BasicComponent implements OnInit {
-  
+
   subscription1: Subscription;
   subscription2: Subscription;
   n1 = 0;
@@ -50,7 +50,7 @@ export class BasicComponent implements OnInit {
         let i:number = 0;
         let id = setInterval(() =>{
           i++;
-          console.log('from Observable: ',i);
+          console.log('from Observable: ', i);
           if (i == 10)
             observer.complete();
           else if (i%2 == 0)
