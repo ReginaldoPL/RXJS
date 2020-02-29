@@ -24,7 +24,7 @@ export class HotObservablesComponent implements OnInit {
         console.log('%c Observable Created', 'background: #cccccc; color: #ffffff');
         setInterval(() => {
           i++;
-          console.log('%c i='+i, 'background: #cccccc; color: #0000ff');
+          console.log('%c i=' + i, 'background: #cccccc; color: #0000ff');
           (i === 100) ? observer.complete() : observer.next(i);
 
         }, 1000);
@@ -37,8 +37,7 @@ export class HotObservablesComponent implements OnInit {
   }
 
   usingShare() {
-    //parecido com publish + refcount, porém no caso do share, se um caso novo pedir subscrive (depois de um complete), continua de novo
-    
+    // parecido com publish + refcount, porém no caso do share, se um caso novo pedir subscrive (depois de um complete), continua de novo
 
     const multicasted = this.myObservable.pipe(share());
 
