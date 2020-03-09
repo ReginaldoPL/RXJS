@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Observer, from, of, interval, timer, Subscription } from 'rxjs';
+import { Observable, Observer, from, of, interval, timer, Subscription, fromEvent } from 'rxjs';
 
 @Component({
   selector: 'app-basic-creation',
@@ -43,10 +43,18 @@ export class BasicCreationComponent implements OnInit {
   timerClick() {
     // const source = timer(1000);
     const source = timer(3000, 1000);
-    const s =  source.subscribe((v) => console.log(v));
+    const s = source.subscribe((v) => console.log(v));
     this.subscription.add(s);
   }
-  unSubscribeClick(){
+
+  fromEventClick() {
+    // poderia usar o viewchild
+    const subscription = fromEvent(document, 'click')
+      .subscribe((e) => console.log(e));
+
+  }
+
+  unSubscribeClick() {
     this.subscription.unsubscribe();
     this.subscription = new Subscription();
   }
