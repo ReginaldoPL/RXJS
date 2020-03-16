@@ -4,13 +4,19 @@
   <button mat-button color="primary" (click)="tapClick()"> tap</button>
   <button mat-button color="primary" (click)="takeClick()"> take / first e last</button>
   <button mat-button color="primary" (click)="debounceTimeClick()"> deBounceTime</button>
+  <button mat-button color="primary" (click)="debounceTimeSearchClick()"> deBounceTime Search</button>
 
 
 </div>
 
-<div class="debounce-area"
-matRipple matRippleCentered="true" matRippleColor="rgb(240,166,166,0.4)" matRippleRadius="40"
->
-
-
+<div class="debounce-area" matRipple matRippleCentered="true" matRippleColor="rgb(240,166,166,0.4)"
+  matRippleRadius="40">
 </div>
+
+<mat-divider></mat-divider>
+<mat-form-field>
+  <mat-label>Search by:</mat-label>
+  <input matInput placeholder="Type somethjing" autocomplete="off" (keyup)="serachBy_UsingDebounceTime($event)"
+    [(ngModel)]="searchInput">
+
+</mat-form-field>
