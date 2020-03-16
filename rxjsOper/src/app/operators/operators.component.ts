@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { from, fromEvent, interval, Observable, Subscription, Subject } from 'rxjs';
-import { map, delay, filter, tap, take, first, last, debounceTime } from 'rxjs/operators';
+import { from, fromEvent, interval, Observable, Subscription, Subject, timer } from 'rxjs';
+import { map, delay, filter, tap, take, first, last, debounceTime, takeWhile, takeUntil } from 'rxjs/operators';
 import { MatRipple } from '@angular/material/core';
 
 @Component({
@@ -9,7 +9,7 @@ import { MatRipple } from '@angular/material/core';
   styleUrls: ['./operators.component.css']
 })
 export class OperatorsComponent implements OnInit {
-  public searchInput: string='';
+  public searchInput: string = '';
 
   @ViewChild(MatRipple) ripple: MatRipple;
 
@@ -87,43 +87,65 @@ export class OperatorsComponent implements OnInit {
         (error) => console.error(error),
         () => console.log("complete!")
       );
-    const interv = setInterval(()=>{
+    const interv = setInterval(() => {
       console.log('Checking...');
-      if(s.closed) {
+      if (s.closed) {
         console.warn('Subscription close');
         clearInterval(interv);
       }
 
-    },200)
+    }, 200)
   }
-  launchRipple(){
+  launchRipple() {
     const rippleRef = this.ripple.launch({
-      persistent: true, centered: true });
-      rippleRef.fadeOut();
+      persistent: true, centered: true
+    });
+    rippleRef.fadeOut();
   }
-  debounceTimeClick(){
+  debounceTimeClick() {
     fromEvent(document, 'click')
-    .pipe(
-      tap((e) => console.log('click')),
-      debounceTime(1000)
-    )
-    .subscribe(
-      (e: MouseEvent) =>{
-      console.log('click With debounceTime: '+e);
-      this.launchRipple();
-    })
+      .pipe(
+        tap((e) => console.log('click')),
+        debounceTime(1000)
+      )
+      .subscribe(
+        (e: MouseEvent) => {
+          console.log('click With debounceTime: ' + e);
+          this.launchRipple();
+        })
   }
-searchEntry$: Subject<string> = new  Subject<string>();
+  searchEntry$: Subject<string> = new Subject<string>();
 
-serachBy_UsingDebounceTime(event){
-  this.searchEntry$.next(this.searchInput);
-}
-  debounceTimeSearchClick(){
+  serachBy_UsingDebounceTime(event) {
+    this.searchEntry$.next(this.searchInput);
+  }
+  debounceTimeSearchClick() {
     this.searchEntry$
-    .pipe(
-      debounceTime(500)
-    )
-    .subscribe((s)=> console.log(s));
+      .pipe(
+        debounceTime(500)
+      )
+      .subscribe((s) => console.log(s));
+
+  }
+  takeWhileClick() {
+    interval(500)
+      .pipe(takeWhile((value, index) => (value < 5)))
+      .subscribe(
+        (i) => console.log('takeWhile: ', i),
+        (error) =>  console.log(error),
+        () => console.log('completes!')
+      );
+
+  }
+  takeUntilClick() {
+    let dueTime$ = timer(5000);
+    interval(500)
+    .pipe(takeUntil(dueTime$))
+    .subscribe(
+      (i) => console.log('takeWhile: ', i),
+      (error) =>  console.log(error),
+      () => console.log('completes!')
+    );
 
   }
 
