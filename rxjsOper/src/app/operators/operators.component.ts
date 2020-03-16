@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { from, fromEvent, interval, Observable } from 'rxjs';
-import { map, delay, filter, tap } from 'rxjs/operators';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { from, fromEvent, interval, Observable, Subscription } from 'rxjs';
+import { map, delay, filter, tap, take, first, last, debounceTime } from 'rxjs/operators';
+import { MatRipple } from '@angular/material/core';
 
 @Component({
   selector: 'app-operators',
@@ -8,6 +9,7 @@ import { map, delay, filter, tap } from 'rxjs/operators';
   styleUrls: ['./operators.component.css']
 })
 export class OperatorsComponent implements OnInit {
+  @ViewChild(MatRipple) ripple: MatRipple;
 
   constructor() { }
 
@@ -62,11 +64,52 @@ export class OperatorsComponent implements OnInit {
       .subscribe(i => console.log(i));
 
   }
-  takeClick() {
+  takeClick() { // take faz complete() depois de algumas x, no caso é 10
     const observable = new Observable((observer) => {
-
-
+      let i;
+      for (i = 0; i < 20; i++)
+        setTimeout(() => observer.next(Math.floor(Math.random() * 100)), i * 100);
+      setTimeout(() => observer.complete(), i * 100);
     });
+
+    const s: Subscription = observable
+      .pipe(
+        tap(i => console.log(i)),
+        //take(10)
+        //first()
+        last()
+
+      )
+      .subscribe(
+        v => console.log('Output: ', v),
+        (error) => console.error(error),
+        () => console.log("complete!")
+      );
+    const interv = setInterval(()=>{
+      console.log('Checking...');
+      if(s.closed) {
+        console.warn('Subscription close');
+        clearInterval(interv);
+      }
+
+    },200)
+  }
+  launchRipple(){
+    const rippleRef = this.ripple.launch({
+      persistent: true, centered: true });
+      rippleRef.fadeOut();
+  }
+  debounceTimeClick(){
+    fromEvent(document, 'click')
+    .pipe(
+      tap((e) => console.log('click')),
+      debounceTime(1000)
+    )
+    .subscribe(
+      (e: MouseEvent) =>{
+      console.log('click With debounceTime: '+e);
+      this.launchRipple();
+    })
   }
 
 }
