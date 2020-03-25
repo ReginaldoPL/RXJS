@@ -3,6 +3,7 @@
     <mat-radio-group [(ngModel)]="option" fxLayout="column" fxLayoutAlign="center start">
       <mat-radio-button value="basic creation">Basic Creation</mat-radio-button>
       <mat-radio-button value="Operators">Operators</mat-radio-button>
+      <mat-radio-button value="async">Templates / Async</mat-radio-button>
 
     </mat-radio-group>
   </div>
@@ -10,6 +11,7 @@
     <ng-container [ngSwitch]="option">
       <app-basic-creation *ngSwitchCase="'basic creation'" fxFill></app-basic-creation>
       <app-operators *ngSwitchCase="'Operators'" fxFill></app-operators>
+      <app-async *ngSwitchCase="'async'" fxFill></app-async>
     </ng-container>
   </div>
 
