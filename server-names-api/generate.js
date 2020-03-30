@@ -3,13 +3,21 @@ const faker = require('faker');
 
 const Person = require('./person.js');
 
-mongoose.connect('mongodb://localhost:27017/namesdb'
-,    { useUnifiedTopology: true }
-    );
 
-async function createRandomPeople(){
+
+mongoose
+    .connect('mongodb://localhost:27017/namesdb', {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+    })
+    .then(() => console.log('DB Connected!'))
+    .catch(err => {
+        console.log(`DB Connection Error: ${err.message}`);
+    });
+
+async function createRandomPeople() {
     const N = 1000;
-    for (let i= 0;i<=N;i++){
+    for (let i = 0; i <= N; i++) {
         let p = new Person({
             firstname: faker.name.firstName(),
             lastname: faker.name.lastName(),
@@ -18,23 +26,23 @@ async function createRandomPeople(){
             country: faker.address.country()
         });
         try {
-                p.save()
+            p.save()
         }
-        catch(err){
+        catch (err) {
             throw new Error('Error generatin new person');
-        }                  
+        }
     }
 }
 //para rodar, executar node generate.js
 
 createRandomPeople()
-.then(()=>{
-    //mongoose.disconnect();
-    console.log("OK");
+    .then(() => {
+        //mongoose.disconnect();
+        console.log("OK");
 
-})
-.catch(error => {
-    //mongoose.disconnect();
-    console.error("erro: ");
+    })
+    .catch(error => {
+        //mongoose.disconnect();
+        console.error("erro: ");
 
-});
+    });

@@ -19,9 +19,9 @@ mongoose
     .catch(err => {
         console.log(`DB Connection Error: ${err.message}`);
     });
-app.get('/', (req, res) => {
-    //Person.find({firstname: 'bob'});
 
+http://localhost:9000/    
+app.get('/', (req, res) => {
     //lean me retorna só os dados (sem a opção de modificar)
     Person.find({}).lean().exec((error, data) => {
         if (error) {
@@ -35,6 +35,36 @@ app.get('/', (req, res) => {
     });
 
 });
+
+//http://localhost:9000/rose
+app.get('/:text', (req, res) => {
+    let text = req.params.text;
+
+    //expressões regulares
+    var query = {
+        $or: [
+            { firstname: { $regex: text, $options: 'i' } },
+            { lastname: { $regex: text, $options: 'i' } },
+            { country: { $regex: text, $options: 'i' } },
+            { email: { $regex: text, $options: 'i' } },
+            { city: { $regex: text, $options: 'i' } },
+        ]
+    };
+
+    //lean me retorna só os dados (sem a opção de modificar)
+    Person.find(query).lean().exec((error, data) => {
+        if (error) {
+            return res.status(500).json({
+                error: error,
+                message: 'Fudeuuuu.'
+            });
+        } else {
+            return res.status(200).json(data);
+        }
+    });
+
+});
+
 //se nenhuma rota for atendida
 app.use(function (req, res, next) {
     res.status(404).send('Rota inexistente.');
