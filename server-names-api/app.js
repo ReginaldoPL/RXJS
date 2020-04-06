@@ -20,7 +20,7 @@ mongoose
         console.log(`DB Connection Error: ${err.message}`);
     });
 
-http://localhost:9000/    
+//http://localhost:9000/    
 app.get('/', (req, res) => {
     //lean me retorna só os dados (sem a opção de modificar)
     Person.find({}).lean().exec((error, data) => {
@@ -59,7 +59,10 @@ app.get('/:text', (req, res) => {
                 message: 'Fudeuuuu.'
             });
         } else {
-            return res.status(200).json(data);
+            setTimeout(() => {
+                return res.status(200).json(data);
+            }, 2000)
+            
         }
     });
 
