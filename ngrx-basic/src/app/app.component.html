@@ -1,0 +1,14 @@
+<div fxLayoute="column" fsLayoutAlign="start center">
+  <div fxLayoute="column" fsLayoutAlign="start stretch" fxFlex="70">
+    <app-person *ngFor="let p of people$ | async" 
+    [person]="p" 
+    (delete)="delete($event)" (update)="update($event)">
+
+
+    </app-person>
+
+  </div>
+
+  <button class="button-add"  mat-fab color="primary" (click)="addNew()">New</button>
+</div>
+people$
