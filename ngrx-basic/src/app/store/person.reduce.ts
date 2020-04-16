@@ -2,26 +2,35 @@ import * as fromPersonActions from './person.actions'
 import { state } from '@angular/animations'
 import { Person } from '../person'
 
-export const initialState: Person[] = []
+import {EntityState, EntityAdapter, createEntityAdapter} from '@ngrx/entity'
+import { selectIds } from './person.selector';
+
+export interface PeopleState extends EntityState<Person>{}
+
+export const peopleAdapter: EntityAdapter<Person> = createEntityAdapter<Person>(
+    {selectId: (p:Person) => p._id}
+);
+
+export const initialState: PeopleState = peopleAdapter.getInitialState({});
 
 export function reducer(state = initialState, action: fromPersonActions.PersonActions) {
     switch (action.type) {
-        case fromPersonActions.PersonActionTypes.PERSON_ALL:
-            return state;
+
+        case fromPersonActions.PersonActionTypes.PERSON_NEW:           
+            return peopleAdapter.addOne(action.payLoad.person, 
+                state);
 
         case fromPersonActions.PersonActionTypes.PERSON_DELETE:
-            return state.filter((p) => p._id != action.payLoad.id);
+            return peopleAdapter.removeOne(
+                    action.payLoad.id, state
+                    );
+            ;        
 
-        case fromPersonActions.PersonActionTypes.PERSON_NEW:
-            //não usar push pq estaria alterando o estado, por isso usar o concat
-            return state.concat([action.payLoad.person]);
-
-        case fromPersonActions.PersonActionTypes.PERSON_UPDATE:
-            let peoples = state.slice();
-            let i = peoples.findIndex((p) => p._id == action.payLoad.person._id);
-            if (i>=0)
-                peoples[i] = action.payLoad.person;
-            return peoples;
+        case fromPersonActions.PersonActionTypes.PERSON_UPDATE:            
+            return peopleAdapter.updateOne(
+                    {id : action.payLoad.id,
+                         changes: action.payLoad.changes},
+                         state);
 
         default:
             return state;

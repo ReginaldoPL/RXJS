@@ -5,8 +5,10 @@ import { Person } from './person'
 
 import * as faker from 'faker';
 import { Store, select } from '@ngrx/store';
-import { AppState, selectPeople, selectPeopleCount } from './store';
+import { AppState } from './store';
 import { PersonNew, PersonUpdate, PersonAll, PersonDelete } from './store/person.actions';
+
+import * as fromPersonSelectors from './store/person.selector'
 
 @Component({
   selector: 'app-root',
@@ -24,10 +26,7 @@ export class AppComponent {
   ngOnInit(){
     this.store.dispatch(new PersonAll());
     //this.people$ = this.store.pipe(select('people'));
-    this.people$ = this.store.select(selectPeople);
-
-    this.store.select(selectPeopleCount)
-    .subscribe((n) => console.log(n))
+    this.people$ = this.store.select(fromPersonSelectors.selectAll);
   }
 
   
@@ -48,7 +47,7 @@ export class AppComponent {
   }
 
   update(p: Person) {
-    
+
     
     let person: Person = {
       name: faker.name.findName(),
@@ -58,8 +57,9 @@ export class AppComponent {
       age: Math.round(Math.random() * 100),
       _id: p._id
     };
+  
 
-    this.store.dispatch(new PersonUpdate({ person: person }));
+    this.store.dispatch(new PersonUpdate({ id: person._id, changes:person }));
 
   }
 

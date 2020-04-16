@@ -22,13 +22,13 @@ export class PersonNew implements Action {
 export class PersonUpdate implements Action {
     readonly type = PersonActionTypes.PERSON_UPDATE;
     //melhor colocar sempre  payLoad: { person: Person }
-    constructor(public payLoad: { person: Person }) { }
+    constructor(public payLoad: { id:string, changes: Partial<Person>}) { }
 }
 
 export class PersonDelete implements Action {
     readonly type = PersonActionTypes.PERSON_DELETE;
     //melhor colocar sempre  payLoad: { id: String }
-    constructor(public payLoad: { id: String }) { }
+    constructor(public payLoad: { id: string }) { }
 }
 
 //eportar tudo
